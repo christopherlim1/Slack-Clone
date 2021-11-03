@@ -1,0 +1,198 @@
+
+openapi: '3.0.3'
+
+info:
+  description: Backend
+  version: 0.1.0
+  title: Backend
+
+servers:
+  - url: http://localhost:3010/v0
+
+paths:
+  /workspace:
+    get:
+      description: Workspace Endpoint
+      responses:
+        200:
+          description: Succesful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceArray'
+        401:
+          description: Unauthorized
+
+  /channel/{workspace}:
+    get:
+      description: Return all channels in workspace
+      parameters:
+      - name: workspace
+        in: path
+        description: ID of Workspace
+        required: true
+        schema:
+          $ref: '#/components/schemas/ID'
+      responses:
+        200:
+          description: Channels found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelArray'
+        401:
+          description: Unauthorized
+
+  /message/{channel}:
+    get:
+      description: Return messages from channel
+      parameters:
+      - name: channel
+        in: path
+        description: ID of Channel
+        required: true
+        schema:
+          $ref: '#/components/schemas/ID'
+      responses:
+        200:
+          description: Channel found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageArray'
+        401:
+          description: Unauthorized
+
+  /user/{workspace}:
+    get:
+      description: Users in workspace
+      parameters:
+      - name: workspace
+        in: path
+        description: ID of Workspace
+        required: true
+        schema:
+          $ref: '#/components/schemas/ID'
+      responses:
+        200:
+          description: Workspace found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserArray'
+        401:
+          description: Unauthorized
+
+  /dm/{user}:
+    get:
+      description: Direct messages of a User
+      parameters:
+      - name: user
+        in: path
+        description: ID of User
+        required: true
+        schema:
+          $ref: '#/components/schemas/ID'
+      responses:
+        200:
+          description: Messages found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DMArray'
+        401:
+          description: Unauthorized
+
+components:
+  schemas:
+    ID:
+      type: string
+      format: uuid
+
+    WorkspaceArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/Workspace'
+    
+    Workspace:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          format: uuid
+      
+    ChannelArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/Channel'
+
+    Channel:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          format: uuid
+
+    MessageArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/Message'
+
+    Message:
+      type: object
+      properties:
+        name:
+          type: string
+        date:
+          type: string
+          format: date-time
+        content:
+          type: string
+        id:
+          type: string
+          format: uuid
+
+    UserArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+        id:
+          type: string
+          format: uuid
+
+    DMArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/DM'
+
+    DM:
+      type: object
+      properties:
+        users:
+          type: object
+        directmsg_id:
+          type: string
+          format: uuid
+        msg:
+          type: array
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
