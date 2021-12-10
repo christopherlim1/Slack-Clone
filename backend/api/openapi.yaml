@@ -7,7 +7,7 @@ info:
   title: Backend
 
 servers:
-  - url: http://localhost:3500/v0
+  - url: http://localhost:3010/v0
 
 paths:
   /workspace:
